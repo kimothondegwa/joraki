@@ -14,7 +14,7 @@ $base_url = BASE_URL;
 
 // Site name (already defined in config, but fallback just in case)
 if (!defined('SITE_NAME')) {
-    define('SITE_NAME', 'Joraki');
+    define('SITE_NAME', 'Joraki Ventures');
 }
 
 // Default page title
@@ -51,7 +51,7 @@ $current_dir = basename(dirname($_SERVER['SCRIPT_NAME']));
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
     <div class="container">
         <a class="navbar-brand fw-bold" href="<?php echo $base_url; ?>">
-            <img src="<?php echo $base_url; ?>joraki.jpg" alt="Joraki Logo" height="40" class="d-inline-block align-text-top me-2">
+            <img src="<?php echo $base_url; ?>Joraki Ventures.png" alt="Joraki Ventures Logo" height="40" class="d-inline-block align-text-top me-2">
             <?php echo htmlspecialchars(SITE_NAME); ?>
         </a>
 

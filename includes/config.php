@@ -13,7 +13,7 @@ define('DB_CHARSET', 'utf8mb4');
 // ============================================
 // SITE CONFIGURATION
 // ============================================
-define('SITE_NAME', 'joraki');
+define('SITE_NAME', 'joraki Ventures');
 define('SITE_URL', 'http://localhost/joraki');  // Change for production
 define('SITE_EMAIL', 'info@joraki.com');
 define('SITE_PHONE', '+254 70 023 02241');

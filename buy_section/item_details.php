@@ -25,6 +25,23 @@ try {
 if (session_status() === PHP_SESSION_NONE) session_start();
 if (empty($_SESSION['buy_csrf'])) $_SESSION['buy_csrf'] = bin2hex(random_bytes(24));
 $csrf = $_SESSION['buy_csrf'];
+
+// Fix image path - check both 'image' and 'image_path' fields
+$imagePath = '';
+if (!empty($item['image'])) {
+    // Use the 'image' field (same as index.php)
+    $imagePath = '../uploads/' . htmlspecialchars($item['image']);
+} elseif (!empty($item['image_path'])) {
+    // Fallback to 'image_path' field if it exists
+    $cleanPath = ltrim($item['image_path'], './');
+    $cleanPath = str_replace('../', '', $cleanPath);
+    
+    if (file_exists(__DIR__ . '/../' . $cleanPath)) {
+        $imagePath = '../' . $cleanPath;
+    } elseif (file_exists(__DIR__ . '/' . $cleanPath)) {
+        $imagePath = $cleanPath;
+    }
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -47,223 +64,298 @@ $csrf = $_SESSION['buy_csrf'];
         --light: #f8fafc;
     }
 
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
     body {
-        font-family: 'Inter', 'Segoe UI', sans-serif;
-        background: var(--light);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f1f5f9;
         color: var(--dark);
+        line-height: 1.6;
     }
 
-    /* Breadcrumb */
-    .breadcrumb-custom {
-        background: white;
-        padding: 20px 0;
-        margin-bottom: 30px;
+    /* Hero Section with Image */
+    .product-hero {
+        background: linear-gradient(to bottom, white 0%, #f8fafc 100%);
+        padding: 2rem 0;
+        border-bottom: 1px solid #e2e8f0;
     }
 
-    .breadcrumb-custom a {
+    .breadcrumb-nav {
+        background: transparent;
+        padding: 1rem 0;
+        margin: 0;
+    }
+
+    .breadcrumb {
+        background: transparent;
+        margin: 0;
+        padding: 0;
+    }
+
+    .breadcrumb-item a {
         color: var(--gray);
         text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s;
+        transition: color 0.2s;
     }
 
-    .breadcrumb-custom a:hover {
+    .breadcrumb-item a:hover {
         color: var(--primary);
     }
 
-    .breadcrumb-custom .current {
+    .breadcrumb-item.active {
         color: var(--dark);
         font-weight: 600;
     }
 
-    /* Main Container */
-    .details-container {
-        padding: 40px 0;
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        color: var(--gray);
     }
 
-    /* Image Section */
-    .image-section {
+    /* Image Gallery */
+    .image-gallery {
         background: white;
-        border-radius: 20px;
-        padding: 30px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-        position: sticky;
-        top: 100px;
-    }
-
-    .main-image {
-        width: 100%;
-        height: 500px;
-        object-fit: cover;
         border-radius: 16px;
-        margin-bottom: 20px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        position: relative;
+        margin-bottom: 2rem;
     }
 
-    .status-badge {
+    .main-product-image {
+        width: 100%;
+        height: 550px;
+        object-fit: cover;
+        border-radius: 12px;
+        background: #f8fafc;
+        display: block;
+    }
+
+    .status-ribbon {
         position: absolute;
-        top: 50px;
-        right: 50px;
+        top: 3rem;
+        left: 3rem;
         background: var(--success);
         color: white;
-        padding: 12px 24px;
-        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
         font-weight: 700;
-        font-size: 1rem;
-        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        font-size: 0.95rem;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        z-index: 10;
     }
 
-    /* Info Section */
-    .info-section {
+    /* Product Info Section */
+    .product-info-section {
         background: white;
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-        margin-bottom: 30px;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
     }
 
-    .item-title {
-        font-size: 2.5rem;
+    .product-header {
+        border-bottom: 2px solid #f1f5f9;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .product-name {
+        font-size: 2.25rem;
         font-weight: 800;
         color: var(--dark);
-        margin-bottom: 20px;
-        line-height: 1.2;
+        margin-bottom: 1rem;
+        line-height: 1.3;
     }
 
-    .item-price {
-        font-size: 3rem;
-        font-weight: 900;
-        color: var(--primary);
-        margin-bottom: 20px;
+    .meta-tags {
         display: flex;
-        align-items: baseline;
-        gap: 10px;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .tag-category {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .tag-condition {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .price-box {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        padding: 2rem;
+        border-radius: 12px;
+        margin: 1.5rem 0;
+        text-align: center;
+        box-shadow: 0 8px 24px rgba(37, 99, 235, 0.25);
     }
 
     .price-label {
-        font-size: 1rem;
-        color: var(--gray);
+        color: rgba(255,255,255,0.9);
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
         font-weight: 600;
     }
 
-    .item-meta {
+    .price-amount {
+        color: white;
+        font-size: 3.5rem;
+        font-weight: 900;
+        line-height: 1;
+    }
+
+    .description-section {
+        margin-top: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 1rem;
         display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        margin-bottom: 30px;
-    }
-
-    .meta-badge {
-        padding: 10px 20px;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
     }
 
-    .meta-badge.category {
-        background: rgba(37, 99, 235, 0.1);
+    .section-title i {
         color: var(--primary);
     }
 
-    .meta-badge.condition {
-        background: rgba(16, 185, 129, 0.1);
-        color: var(--success);
-    }
-
-    .divider {
-        height: 2px;
-        background: var(--light);
-        margin: 30px 0;
-    }
-
-    .item-description {
-        font-size: 1.125rem;
-        line-height: 1.8;
+    .description-text {
         color: var(--gray);
-        margin-bottom: 30px;
+        font-size: 1rem;
+        line-height: 1.8;
     }
 
-    /* Buy Form Section */
-    .buy-form-section {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 20px 60px rgba(37, 99, 235, 0.3);
-        color: white;
+    /* Features Grid */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 2rem;
     }
 
-    .form-header {
-        margin-bottom: 30px;
+    .feature-box {
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
     }
 
-    .form-header h3 {
+    .feature-box:hover {
+        background: white;
+        border-color: var(--primary);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 0.75rem;
+    }
+
+    .feature-name {
+        font-weight: 700;
+        color: var(--dark);
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .feature-desc {
+        color: var(--gray);
+        font-size: 0.875rem;
+    }
+
+    /* Purchase Form */
+    .purchase-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border: 2px solid #e2e8f0;
+    }
+
+    .form-title {
         font-size: 1.75rem;
         font-weight: 800;
-        margin-bottom: 10px;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 0.75rem;
     }
 
-    .form-header p {
-        opacity: 0.9;
-        font-size: 1rem;
+    .form-subtitle {
+        color: var(--gray);
+        margin-bottom: 2rem;
     }
 
-    .form-group {
-        margin-bottom: 25px;
+    .input-group-custom {
+        margin-bottom: 1.5rem;
     }
 
-    .form-group label {
+    .input-label {
         display: block;
         font-weight: 600;
-        margin-bottom: 10px;
-        font-size: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
     }
 
-    .form-control-custom {
-        width: 100%;
-        padding: 16px 20px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 12px;
-        font-size: 1rem;
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-        transition: all 0.3s;
-        backdrop-filter: blur(10px);
-    }
-
-    .form-control-custom::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-    }
-
-    .form-control-custom:focus {
-        outline: none;
-        border-color: white;
-        background: rgba(255, 255, 255, 0.15);
-        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
-    }
-
-    .form-control-custom option {
-        background: var(--primary-dark);
-        color: white;
-    }
-
-    .btn-buy-now {
-        width: 100%;
-        padding: 18px;
-        background: white;
+    .input-label i {
         color: var(--primary);
+        margin-right: 0.5rem;
+        width: 20px;
+    }
+
+    .form-input,
+    .form-select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s;
+        background: white;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .btn-purchase {
+        width: 100%;
+        padding: 1.25rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
         border: none;
-        border-radius: 12px;
+        border-radius: 10px;
         font-size: 1.125rem;
         font-weight: 700;
         cursor: pointer;
@@ -271,140 +363,166 @@ $csrf = $_SESSION['buy_csrf'];
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 10px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
     }
 
-    .btn-buy-now:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        background: var(--light);
+    .btn-purchase:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(37, 99, 235, 0.4);
     }
 
-    .btn-buy-now:active {
-        transform: translateY(-1px);
+    .btn-purchase:active {
+        transform: translateY(0);
     }
 
-    /* Additional Info Cards */
-    .info-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
+    .security-note {
+        background: #f0f9ff;
+        border: 2px solid #bae6fd;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: start;
+        gap: 0.75rem;
+        font-size: 0.875rem;
+        color: var(--primary-dark);
     }
 
-    .info-card {
-        background: var(--light);
-        padding: 25px;
-        border-radius: 16px;
-        text-align: center;
-        border: 2px solid transparent;
-        transition: all 0.3s;
+    .security-note i {
+        font-size: 1.25rem;
+        margin-top: 0.125rem;
     }
 
-    .info-card:hover {
-        border-color: var(--primary);
-        transform: translateY(-3px);
+    /* Info List */
+    .info-list {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 2rem;
     }
 
-    .info-card-icon {
-        font-size: 2.5rem;
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-icon {
+        width: 50px;
+        height: 50px;
+        background: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
         color: var(--primary);
-        margin-bottom: 15px;
+        flex-shrink: 0;
     }
 
-    .info-card h4 {
-        font-size: 1.125rem;
+    .info-content h5 {
+        font-size: 1rem;
         font-weight: 700;
         color: var(--dark);
-        margin-bottom: 8px;
+        margin: 0 0 0.25rem 0;
     }
 
-    .info-card p {
+    .info-content p {
         color: var(--gray);
-        font-size: 0.95rem;
+        font-size: 0.875rem;
         margin: 0;
     }
 
     /* Back Button */
-    .back-btn {
+    .btn-back {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: white;
         color: var(--gray);
         text-decoration: none;
-        font-weight: 600;
-        padding: 12px 24px;
         border-radius: 10px;
+        font-weight: 600;
         transition: all 0.3s;
-        background: white;
-        margin-bottom: 20px;
+        border: 2px solid #e2e8f0;
+        margin-bottom: 1.5rem;
     }
 
-    .back-btn:hover {
+    .btn-back:hover {
         background: var(--primary);
         color: white;
-        transform: translateX(-5px);
-    }
-
-    /* Security Notice */
-    .security-notice {
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-        padding: 20px;
-        margin-top: 25px;
-        font-size: 0.95rem;
-        display: flex;
-        align-items: start;
-        gap: 12px;
-    }
-
-    .security-notice i {
-        font-size: 1.5rem;
-        opacity: 0.9;
+        border-color: var(--primary);
+        transform: translateX(-4px);
     }
 
     /* Responsive */
-    @media (max-width: 768px) {
-        .item-title {
-            font-size: 2rem;
+    @media (max-width: 991px) {
+        .product-name {
+            font-size: 1.75rem;
         }
 
-        .item-price {
+        .price-amount {
             font-size: 2.5rem;
         }
 
-        .image-section {
-            position: static;
-            margin-bottom: 30px;
+        .main-product-image {
+            height: 400px;
         }
 
-        .main-image {
-            height: 350px;
-        }
-
-        .status-badge {
-            top: 40px;
-            right: 40px;
-            padding: 10px 20px;
+        .status-ribbon {
+            top: 2rem;
+            left: 2rem;
             font-size: 0.875rem;
+            padding: 0.625rem 1.25rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .product-name {
+            font-size: 1.5rem;
         }
 
-        .info-cards {
+        .price-amount {
+            font-size: 2rem;
+        }
+
+        .main-product-image {
+            height: 300px;
+        }
+
+        .features-grid {
             grid-template-columns: 1fr;
         }
+
+        .product-info-section,
+        .purchase-card,
+        .image-gallery {
+            padding: 1.5rem;
+        }
+
+        .status-ribbon {
+            top: 1.5rem;
+            left: 1.5rem;
+            font-size: 0.8rem;
+            padding: 0.5rem 1rem;
+        }
     }
 
-    /* Loading Animation */
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
+    .loading-spinner {
+        animation: rotate 1s linear infinite;
     }
 
-    .btn-buy-now.loading {
-        pointer-events: none;
-        animation: pulse 1.5s ease-in-out infinite;
+    @keyframes rotate {
+        to { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -412,160 +530,212 @@ $csrf = $_SESSION['buy_csrf'];
 
 <?php include __DIR__ . '/../includes/header.php'; ?>
 
-<!-- Breadcrumb -->
-<div class="breadcrumb-custom">
+<div class="product-hero">
     <div class="container">
-        <a href="../index.php">
-            <i class="fas fa-home"></i> Home
-        </a>
-        <span class="mx-2">/</span>
-        <a href="index.php">Shop</a>
-        <span class="mx-2">/</span>
-        <span class="current"><?= htmlspecialchars($item['title']) ?></span>
+        <nav class="breadcrumb-nav" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="../index.php"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="index.php">Shop</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <?= htmlspecialchars($item['title']) ?>
+                </li>
+            </ol>
+        </nav>
     </div>
 </div>
 
-<main class="details-container">
+<main style="padding: 2rem 0 4rem;">
     <div class="container">
-        <!-- Back Button -->
-        <a href="index.php" class="back-btn">
+        <a href="index.php" class="btn-back">
             <i class="fas fa-arrow-left"></i>
             Back to Shop
         </a>
 
         <div class="row g-4">
-            <!-- Image Section -->
-            <div class="col-lg-5">
-                <div class="image-section">
-                    <?php if (!empty($item['image_path']) && file_exists(__DIR__ . '/../' . $item['image_path'])): ?>
-                        <img src="../<?= htmlspecialchars($item['image_path']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="main-image">
-                    <?php else: ?>
-                        <img src="https://via.placeholder.com/600x500/f8fafc/2563eb?text=<?= urlencode($item['title']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="main-image">
-                    <?php endif; ?>
-                    
-                    <span class="status-badge">
-                        <i class="fas fa-check-circle"></i>
-                        Refurbished
+            <!-- Left: Image Gallery -->
+            <div class="col-lg-6">
+                <div class="image-gallery">
+                    <span class="status-ribbon">
+                        <i class="fas fa-check-circle me-2"></i>Refurbished
                     </span>
+                    <?php if (!empty($imagePath)): ?>
+                        <img src="<?= htmlspecialchars($imagePath) ?>" 
+                             alt="<?= htmlspecialchars($item['title']) ?>" 
+                             class="main-product-image"
+                             onerror="this.src='https://via.placeholder.com/600x550/e2e8f0/2563eb?text=<?= urlencode($item['title']) ?>'">
+                    <?php else: ?>
+                        <img src="https://via.placeholder.com/600x550/e2e8f0/2563eb?text=<?= urlencode($item['title']) ?>" 
+                             alt="<?= htmlspecialchars($item['title']) ?>" 
+                             class="main-product-image">
+                    <?php endif; ?>
+                </div>
 
-                    <!-- Additional Info Cards -->
-                    <div class="info-cards mt-4">
-                        <div class="info-card">
-                            <div class="info-card-icon">
-                                <i class="fas fa-shield-check"></i>
-                            </div>
-                            <h4>Quality Checked</h4>
-                            <p>Certified by experts</p>
+                <div class="features-grid">
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
                         </div>
-                        <div class="info-card">
-                            <div class="info-card-icon">
-                                <i class="fas fa-truck"></i>
-                            </div>
-                            <h4>Fast Delivery</h4>
-                            <p>2-3 business days</p>
+                        <div class="feature-name">Quality Assured</div>
+                        <div class="feature-desc">Expert certified</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <i class="fas fa-shipping-fast"></i>
                         </div>
+                        <div class="feature-name">Fast Shipping</div>
+                        <div class="feature-desc">2-3 business days</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <i class="fas fa-undo-alt"></i>
+                        </div>
+                        <div class="feature-name">Easy Returns</div>
+                        <div class="feature-desc">30-day policy</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="feature-name">24/7 Support</div>
+                        <div class="feature-desc">Always available</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Info & Form Section -->
-            <div class="col-lg-7">
-                <!-- Item Information -->
-                <div class="info-section">
-                    <h1 class="item-title"><?= htmlspecialchars($item['title']) ?></h1>
-                    
-                    <div class="item-meta">
-                        <?php if (!empty($item['category'])): ?>
-                        <span class="meta-badge category">
-                            <i class="fas fa-tag"></i>
-                            <?= htmlspecialchars($item['category']) ?>
-                        </span>
-                        <?php endif; ?>
-                        
-                        <?php if (!empty($item['condition_type'])): ?>
-                        <span class="meta-badge condition">
-                            <i class="fas fa-star"></i>
-                            <?= ucfirst(htmlspecialchars($item['condition_type'])) ?>
-                        </span>
-                        <?php endif; ?>
+            <!-- Right: Product Details & Form -->
+            <div class="col-lg-6">
+                <!-- Product Info -->
+                <div class="product-info-section">
+                    <div class="product-header">
+                        <h1 class="product-name"><?= htmlspecialchars($item['title']) ?></h1>
+                        <div class="meta-tags">
+                            <?php if (!empty($item['category'])): ?>
+                            <span class="tag tag-category">
+                                <i class="fas fa-tag"></i>
+                                <?= htmlspecialchars($item['category']) ?>
+                            </span>
+                            <?php endif; ?>
+                            
+                            <?php if (!empty($item['condition_type'])): ?>
+                            <span class="tag tag-condition">
+                                <i class="fas fa-certificate"></i>
+                                <?= ucfirst(htmlspecialchars($item['condition_type'])) ?>
+                            </span>
+                            <?php endif; ?>
+                        </div>
                     </div>
 
-                    <div class="item-price">
-                        <span class="price-label">Price:</span>
-                        <?= htmlspecialchars(CURRENCY_SYMBOL) ?> <?= number_format($item['price'], 2) ?>
+                    <div class="price-box">
+                        <div class="price-label">Price</div>
+                        <div class="price-amount">
+                            <?= htmlspecialchars(CURRENCY_SYMBOL) ?><?= number_format($item['price'], 2) ?>
+                        </div>
                     </div>
 
-                    <div class="divider"></div>
-
-                    <div class="item-description">
-                        <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 15px; color: var(--dark);">
-                            <i class="fas fa-info-circle me-2 text-primary"></i>Description
+                    <div class="description-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-align-left"></i>
+                            Product Description
                         </h3>
-                        <?= nl2br(htmlspecialchars($item['description'] ?? 'No description available.')) ?>
+                        <div class="description-text">
+                            <?= nl2br(htmlspecialchars($item['description'] ?? 'No description available.')) ?>
+                        </div>
+                    </div>
+
+                    <div class="info-list">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <div class="info-content">
+                                <h5>Warranty Included</h5>
+                                <p>1-year manufacturer warranty</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="info-content">
+                                <h5>Secure Payment</h5>
+                                <p>All transactions are encrypted</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="info-content">
+                                <h5>Top Rated</h5>
+                                <p>Highly rated by customers</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Buy Form -->
-                <div class="buy-form-section">
-                    <div class="form-header">
-                        <h3>
-                            <i class="fas fa-shopping-cart"></i>
-                            Purchase This Item
-                        </h3>
-                        <p>Fill in your details to complete your order</p>
-                    </div>
+                <!-- Purchase Form -->
+                <div class="purchase-card">
+                    <h2 class="form-title">
+                        <i class="fas fa-shopping-cart"></i>
+                        Complete Your Purchase
+                    </h2>
+                    <p class="form-subtitle">Enter your details below to place your order</p>
 
                     <form method="post" action="process_buy.php" id="buyForm">
                         <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf) ?>">
                         <input type="hidden" name="item_id" value="<?= htmlspecialchars($item['id']) ?>">
 
-                        <div class="form-group">
-                            <label>
+                        <div class="input-group-custom">
+                            <label class="input-label">
                                 <i class="fas fa-user"></i>
                                 Full Name
                             </label>
-                            <input type="text" name="buyer_name" required class="form-control-custom" placeholder="Enter your full name">
+                            <input type="text" name="buyer_name" required class="form-input" placeholder="John Doe">
                         </div>
 
-                        <div class="form-group">
-                            <label>
+                        <div class="input-group-custom">
+                            <label class="input-label">
                                 <i class="fas fa-envelope"></i>
                                 Email Address
                             </label>
-                            <input type="email" name="buyer_email" required class="form-control-custom" placeholder="you@example.com">
+                            <input type="email" name="buyer_email" required class="form-input" placeholder="john@example.com">
                         </div>
 
-                        <div class="form-group">
-                            <label>
+                        <div class="input-group-custom">
+                            <label class="input-label">
                                 <i class="fas fa-phone"></i>
                                 Phone Number
                             </label>
-                            <input type="tel" name="buyer_phone" required class="form-control-custom" placeholder="+254 7XX XXX XXX">
+                            <input type="tel" name="buyer_phone" required class="form-input" placeholder="+254 700 000 000">
                         </div>
 
-                        <div class="form-group">
-                            <label>
-                                <i class="fas fa-credit-card"></i>
+                        <div class="input-group-custom">
+                            <label class="input-label">
+                                <i class="fas fa-wallet"></i>
                                 Payment Method
                             </label>
-                            <select name="payment_method" required class="form-control-custom">
-                                <option value="">Select payment method</option>
+                            <select name="payment_method" required class="form-select">
+                                <option value="">Choose payment option</option>
                                 <option value="cod">Cash on Delivery</option>
                                 <option value="mpesa">M-Pesa</option>
                                 <option value="paypal">PayPal</option>
                             </select>
                         </div>
 
-                        <button type="submit" class="btn-buy-now">
-                            <i class="fas fa-shopping-bag"></i>
-                            Buy Now - <?= htmlspecialchars(CURRENCY_SYMBOL) ?> <?= number_format($item['price'], 2) ?>
+                        <button type="submit" class="btn-purchase">
+                            <i class="fas fa-lock"></i>
+                            Secure Checkout - <?= htmlspecialchars(CURRENCY_SYMBOL) ?><?= number_format($item['price'], 2) ?>
                         </button>
 
-                        <div class="security-notice">
-                            <i class="fas fa-lock"></i>
+                        <div class="security-note">
+                            <i class="fas fa-shield-check"></i>
                             <div>
-                                <strong>Secure Transaction</strong><br>
-                                Your information is protected with industry-standard encryption.
+                                <strong>Safe & Secure</strong><br>
+                                Your data is protected with 256-bit SSL encryption. We never store your payment information.
                             </div>
                         </div>
                     </form>
@@ -578,17 +748,28 @@ $csrf = $_SESSION['buy_csrf'];
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 
 <script>
-// Form validation and loading state
 document.getElementById('buyForm').addEventListener('submit', function(e) {
-    const btn = this.querySelector('.btn-buy-now');
-    btn.classList.add('loading');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    const btn = this.querySelector('.btn-purchase');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner loading-spinner"></i> Processing Order...';
 });
 
-// Smooth scroll to form on page load if coming from product card
+// Smooth scroll if hash present
 if (window.location.hash === '#buy') {
-    document.querySelector('.buy-form-section').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+        document.querySelector('.purchase-card').scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center'
+        });
+    }, 100);
 }
+
+// Image error handling
+document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('error', function() {
+        console.log('Image failed to load:', this.src);
+    });
+});
 </script>
 
 </body>
