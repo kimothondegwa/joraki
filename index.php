@@ -1,5 +1,5 @@
 <?php
-// index.php - Joraki Homepage Clean & Modern
+// index.php - Joraki Homepage Premium Modern Design
 session_start();
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/db.php';
@@ -29,7 +29,7 @@ include __DIR__ . '/includes/header.php';
 ?>
 
 <style>
-/* Clean Modern Design System */
+/* Premium Modern Design System - Original Joraki Colors */
 :root {
     --primary: #2563eb;
     --primary-light: #3b82f6;
@@ -40,6 +40,9 @@ include __DIR__ . '/includes/header.php';
     --gray: #64748b;
     --light: #f8fafc;
     --white: #ffffff;
+    --gradient-1: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    --gradient-2: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+    --gradient-3: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
 }
 
 * {
@@ -49,479 +52,659 @@ include __DIR__ . '/includes/header.php';
 }
 
 body {
-    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: var(--dark);
     line-height: 1.6;
     overflow-x: hidden;
+    background: var(--white);
 }
 
-/* Hero Section - Clean & Modern */
+/* Animated Background Blobs */
 .hero-section {
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    padding: 120px 0 80px;
     position: relative;
+    padding: 140px 0 100px;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    overflow: hidden;
+}
+
+.hero-section::before,
+.hero-section::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    animation: float 20s infinite ease-in-out;
 }
 
 .hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(135deg, transparent 0%, rgba(37, 99, 235, 0.05) 100%);
-    z-index: 0;
+    width: 500px;
+    height: 500px;
+    background: var(--gradient-1);
+    top: -200px;
+    right: -100px;
+}
+
+.hero-section::after {
+    width: 400px;
+    height: 400px;
+    background: var(--gradient-3);
+    bottom: -150px;
+    left: -100px;
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
 }
 
 .hero-content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    animation: slideDown 0.8s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-title {
-    font-size: 3.5rem;
-    font-weight: 800;
-    color: var(--dark);
-    line-height: 1.2;
-    margin-bottom: 1.5rem;
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInUp 1s ease;
 }
 
-.hero-title .brand {
-    color: var(--primary);
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-text {
     font-size: 1.25rem;
     color: var(--gray);
-    margin-bottom: 2.5rem;
+    margin-bottom: 40px;
     max-width: 600px;
+    line-height: 1.8;
+    animation: fadeInUp 1.2s ease;
+}
+
+/* Premium Buttons with Hover Effects */
+.btn-hero-primary {
+    background: var(--gradient-1);
+    color: white;
+    padding: 18px 40px;
+    border-radius: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-hero-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s;
+}
+
+.btn-hero-primary:hover::before {
+    left: 100%;
+}
+
+.btn-hero-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+
+.btn-hero-secondary {
+    background: white;
+    color: var(--primary);
+    padding: 18px 40px;
+    border-radius: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.4s ease;
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.btn-hero-secondary:hover {
+    background: var(--light);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+}
+
+/* 3D Floating Hero Image */
+.hero-image-wrapper {
+    position: relative;
+    animation: floatImage 6s ease-in-out infinite;
+}
+
+@keyframes floatImage {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
 }
 
 .hero-image {
     max-width: 100%;
-    height: auto;
+    filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.15));
 }
 
-/* Buttons - Clean Style */
-.btn-primary-clean {
-    background: var(--primary);
-    color: white;
-    padding: 16px 40px;
-    border-radius: 12px;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.btn-primary-clean:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
-    color: white;
-}
-
-.btn-outline-clean {
-    background: white;
-    color: var(--primary);
-    padding: 16px 40px;
-    border-radius: 12px;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    border: 2px solid var(--primary);
-}
-
-.btn-outline-clean:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
-}
-
-/* Stats Section - Simple Cards */
+/* Glassmorphism Stats */
 .stats-section {
-    padding: 80px 0;
-    background: white;
+    padding: 0;
+    margin-top: -60px;
+    position: relative;
+    z-index: 10;
 }
 
-.stat-card {
-    background: var(--light);
-    padding: 40px 30px;
-    border-radius: 16px;
+.stat-card-glass {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    padding: 50px 30px;
+    border-radius: 24px;
     text-align: center;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-.stat-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+.stat-card-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-1);
+    transform: scaleX(0);
+    transition: transform 0.5s ease;
 }
 
-.stat-icon {
-    font-size: 3rem;
-    margin-bottom: 20px;
+.stat-card-glass:hover::before {
+    transform: scaleX(1);
 }
 
-.stat-icon.blue { color: var(--primary); }
-.stat-icon.orange { color: var(--accent); }
-.stat-icon.green { color: var(--success); }
-
-.stat-number {
-    font-size: 3rem;
-    font-weight: 800;
-    color: var(--dark);
-    margin-bottom: 10px;
+.stat-card-glass:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 1);
 }
 
-.stat-label {
-    font-size: 1rem;
-    color: var(--gray);
-    font-weight: 500;
-}
-
-/* Process Section - Clean Steps */
-.process-section {
-    padding: 80px 0;
-    background: var(--light);
-}
-
-.section-title {
+.stat-icon-modern {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--dark);
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-.section-subtitle {
-    font-size: 1.125rem;
-    color: var(--gray);
-    text-align: center;
-    margin-bottom: 60px;
-}
-
-.process-card {
-    background: white;
-    padding: 40px 30px;
-    border-radius: 16px;
-    text-align: center;
-    height: 100%;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
     position: relative;
 }
 
-.process-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+.stat-icon-modern.gradient-1 {
+    background: var(--gradient-1);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
 }
 
-.process-number {
-    width: 50px;
-    height: 50px;
-    background: var(--primary);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin: 0 auto 25px;
+.stat-icon-modern.gradient-2 {
+    background: var(--gradient-2);
+    box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3);
 }
 
-.process-icon {
-    font-size: 3rem;
-    color: var(--primary);
-    margin-bottom: 20px;
+.stat-icon-modern.gradient-3 {
+    background: var(--gradient-3);
+    box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
 }
 
-.process-card h4 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--dark);
-    margin-bottom: 15px;
+.stat-number-modern {
+    font-size: 3.5rem;
+    font-weight: 900;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
 }
 
-.process-card p {
+.stat-label-modern {
+    font-size: 1.125rem;
     color: var(--gray);
-    font-size: 1rem;
-    line-height: 1.6;
-}
-
-/* Product Cards - Modern & Clean */
-.products-section {
-    padding: 80px 0;
-    background: white;
-}
-
-.product-card {
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    border: 2px solid #e2e8f0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.product-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-}
-
-.product-image {
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
-    background: var(--light);
-}
-
-.product-content {
-    padding: 25px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.product-badges {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-}
-
-.badge-custom {
-    padding: 6px 14px;
-    border-radius: 8px;
-    font-size: 0.875rem;
     font-weight: 600;
 }
 
-.badge-primary {
-    background: rgba(37, 99, 235, 0.1);
-    color: var(--primary);
+/* Modern Section Headers */
+.section-modern {
+    padding: 120px 0;
 }
 
-.badge-success {
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--success);
+.section-header-modern {
+    text-align: center;
+    margin-bottom: 80px;
 }
 
-.badge-gray {
-    background: rgba(100, 116, 139, 0.1);
-    color: var(--gray);
-}
-
-.product-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--dark);
-    margin-bottom: 12px;
-}
-
-.product-description {
-    color: var(--gray);
-    font-size: 0.95rem;
-    margin-bottom: 20px;
-    flex-grow: 1;
-}
-
-.product-footer {
-    display: flex;
-    justify-content: space-between;
+.section-badge {
+    display: inline-flex;
     align-items: center;
-    padding-top: 20px;
-    border-top: 2px solid var(--light);
-}
-
-.product-price {
-    font-size: 1.75rem;
-    font-weight: 800;
+    gap: 8px;
+    background: rgba(99, 102, 241, 0.1);
     color: var(--primary);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 16px;
 }
 
-.product-price-label {
-    font-size: 0.75rem;
+.section-title-modern {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--dark);
+    margin-bottom: 16px;
+    line-height: 1.2;
+}
+
+.section-subtitle-modern {
+    font-size: 1.25rem;
     color: var(--gray);
-    display: block;
-    margin-bottom: 5px;
+    max-width: 700px;
+    margin: 0 auto;
 }
 
-/* Features Section */
-.features-section {
-    padding: 80px 0;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: white;
+/* Premium Process Cards with Icons */
+.process-card-modern {
+    background: white;
+    padding: 50px 35px;
+    border-radius: 24px;
+    text-align: center;
+    height: 100%;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
 }
 
-.feature-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 35px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
+.process-card-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-1);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 0;
 }
 
-.feature-card:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-5px);
+.process-card-modern:hover::before {
+    opacity: 1;
 }
 
-.feature-icon {
+.process-card-modern:hover {
+    transform: translateY(-15px);
+    border-color: var(--primary);
+    box-shadow: 0 25px 60px rgba(99, 102, 241, 0.25);
+}
+
+.process-card-modern:hover * {
+    color: white !important;
+    position: relative;
+    z-index: 1;
+}
+
+.process-number-modern {
     width: 60px;
     height: 60px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+    background: var(--gradient-1);
+    color: white;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.75rem;
-    margin-bottom: 20px;
+    font-weight: 900;
+    margin: 0 auto 28px;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    position: relative;
+    z-index: 1;
 }
 
-.feature-card h5 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 12px;
+.process-icon-modern {
+    font-size: 3.5rem;
+    color: var(--primary);
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
 }
 
-.feature-card p {
+.process-card-modern h4 {
+    font-size: 1.375rem;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.process-card-modern p {
+    color: var(--gray);
     font-size: 1rem;
-    opacity: 0.9;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+}
+
+/* Premium Product Cards with Gradient Borders */
+.product-card-modern {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.product-card-modern::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 2px;
+    background: var(--gradient-1);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.product-card-modern:hover::before {
+    opacity: 1;
+}
+
+.product-card-modern:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
+}
+
+.product-image-modern {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    background: var(--light);
+    transition: transform 0.5s ease;
+}
+
+.product-card-modern:hover .product-image-modern {
+    transform: scale(1.05);
+}
+
+.product-content-modern {
+    padding: 32px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-badges-modern {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.badge-modern {
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-gradient-1 {
+    background: var(--gradient-1);
+    color: white;
+}
+
+.badge-gradient-2 {
+    background: var(--gradient-2);
+    color: white;
+}
+
+.badge-gradient-3 {
+    background: var(--gradient-3);
+    color: white;
+}
+
+.product-title-modern {
+    font-size: 1.375rem;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 14px;
+    line-height: 1.3;
+}
+
+.product-description-modern {
+    color: var(--gray);
+    font-size: 1rem;
+    margin-bottom: 24px;
+    flex-grow: 1;
     line-height: 1.6;
 }
 
-/* Categories Section */
-.categories-section {
-    padding: 80px 0;
-    background: var(--light);
+.product-footer-modern {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 24px;
+    border-top: 2px solid var(--light);
 }
 
-.category-card {
-    background: white;
-    padding: 60px 30px;
-    border-radius: 16px;
-    text-align: center;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: block;
-    border: 2px solid transparent;
+.product-price-modern {
+    font-size: 2rem;
+    font-weight: 900;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.category-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-}
-
-.category-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
-}
-
-.category-card h5 {
-    font-size: 1.25rem;
+.btn-product-modern {
+    background: var(--gradient-1);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 14px;
     font-weight: 700;
-    color: var(--dark);
-    margin: 0;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.4s ease;
+    border: none;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
 }
 
-/* CTA Section */
-.cta-section {
-    padding: 100px 0;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+.btn-product-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+    color: white;
+}
+
+/* Features with Icons */
+.features-modern {
+    background: var(--dark);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.features-modern::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: var(--gradient-1);
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.1;
+    top: -300px;
+    right: -300px;
+}
+
+.feature-card-modern {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 45px 35px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.5s ease;
     text-align: center;
+    height: 100%;
 }
 
-.cta-title {
-    font-size: 3rem;
+.feature-card-modern:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-10px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.feature-icon-modern {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin: 0 auto 24px;
+}
+
+.feature-card-modern h5 {
+    font-size: 1.375rem;
     font-weight: 800;
-    color: var(--dark);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
-.cta-text {
-    font-size: 1.25rem;
-    color: var(--gray);
-    margin-bottom: 40px;
-    max-width: 700px;
+.feature-card-modern p {
+    opacity: 0.9;
+    line-height: 1.7;
+}
+
+/* CTA Section with Gradient */
+.cta-modern {
+    padding: 120px 0;
+    background: var(--gradient-1);
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-modern::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    filter: blur(80px);
+    top: -250px;
+    left: -250px;
+}
+
+.cta-title-modern {
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.cta-text-modern {
+    font-size: 1.375rem;
+    margin-bottom: 48px;
+    max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    opacity: 0.95;
+    position: relative;
 }
 
-/* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 80px 20px;
+.btn-cta-white {
+    background: white;
+    color: var(--primary);
+    padding: 20px 50px;
+    border-radius: 16px;
+    font-weight: 800;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.4s ease;
+    border: none;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    font-size: 1.125rem;
 }
 
-.empty-state i {
-    font-size: 5rem;
-    color: #cbd5e1;
-    margin-bottom: 25px;
-}
-
-.empty-state h4 {
-    font-size: 1.5rem;
-    color: var(--gray);
-    margin-bottom: 10px;
-}
-
-.empty-state p {
-    color: var(--gray);
+.btn-cta-white:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    color: var(--primary);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .hero-title {
-        font-size: 2.5rem;
-    }
-    
-    .hero-text {
-        font-size: 1.125rem;
-    }
-    
-    .section-title {
-        font-size: 2rem;
-    }
-    
-    .stat-number {
-        font-size: 2.5rem;
-    }
-    
-    .cta-title {
-        font-size: 2rem;
-    }
-}
-
-/* Smooth Animations */
-.fade-in {
-    animation: fadeIn 0.8s ease-in;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    .hero-title { font-size: 2.5rem; }
+    .section-title-modern { font-size: 2rem; }
+    .cta-title-modern { font-size: 2.25rem; }
+    .stat-number-modern { font-size: 2.5rem; }
 }
 </style>
 
@@ -530,27 +713,33 @@ body {
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-5 mb-lg-0">
-                <div class="hero-content fade-in">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <i class="fas fa-star"></i>
+                        <span>Trusted by 10,000+ Customers</span>
+                    </div>
                     <h1 class="hero-title">
-                        Welcome to <span class="brand">Joraki Ventures</span>
+                        Discover Quality Refurbished Items
                     </h1>
                     <p class="hero-text">
-                        Buy and sell professionally refurbished items with confidence. Quality products, fair prices, and sustainable shopping.
+                        Buy and sell professionally refurbished products with complete confidence. Premium quality, unbeatable prices, sustainable shopping for a better tomorrow.
                     </p>
                     <div class="d-flex flex-wrap gap-3">
-                        <a href="buy_section/index.php" class="btn-primary-clean">
+                        <a href="buy_section/index.php" class="btn-hero-primary">
                             <i class="fas fa-shopping-cart"></i>
-                            Browse Items
+                            Explore Marketplace
                         </a>
-                        <a href="sell_section/index.php" class="btn-outline-clean">
+                        <a href="sell_section/index.php" class="btn-hero-secondary">
                             <i class="fas fa-tag"></i>
-                            Sell Your Item
+                            Sell Now
                         </a>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
-                <img src="assets/images/hero-illustration.svg" alt="Joraki" class="hero-image" onerror="this.src='https://via.placeholder.com/600x400/e0f2fe/2563eb?text=Joraki+Platform'">
+                <div class="hero-image-wrapper">
+                    <img src="assets/images/hero-illustration.svg" alt="Joraki" class="hero-image" onerror="this.src='https://via.placeholder.com/600x400/667eea/ffffff?text=Premium+Marketplace'">
+                </div>
             </div>
         </div>
     </div>
@@ -561,30 +750,30 @@ body {
     <div class="container">
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="stat-card">
-                    <div class="stat-icon green">
+                <div class="stat-card-glass">
+                    <div class="stat-icon-modern gradient-1">
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <div class="stat-number"><?php echo number_format($total_sold); ?>+</div>
-                    <div class="stat-label">Items Successfully Sold</div>
+                    <div class="stat-number-modern"><?php echo number_format($total_sold); ?>+</div>
+                    <div class="stat-label-modern">Items Successfully Sold</div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="stat-card">
-                    <div class="stat-icon orange">
+                <div class="stat-card-glass">
+                    <div class="stat-icon-modern gradient-2">
                         <i class="fas fa-store"></i>
                     </div>
-                    <div class="stat-number"><?php echo number_format($active_listings); ?></div>
-                    <div class="stat-label">Active Listings</div>
+                    <div class="stat-number-modern"><?php echo number_format($active_listings); ?></div>
+                    <div class="stat-label-modern">Active Listings</div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="stat-card">
-                    <div class="stat-icon blue">
+                <div class="stat-card-glass">
+                    <div class="stat-icon-modern gradient-3">
                         <i class="fas fa-users"></i>
                     </div>
-                    <div class="stat-number"><?php echo number_format($total_users); ?>+</div>
-                    <div class="stat-label">Happy Customers</div>
+                    <div class="stat-number-modern"><?php echo number_format($total_users); ?>+</div>
+                    <div class="stat-label-modern">Happy Customers</div>
                 </div>
             </div>
         </div>
@@ -592,42 +781,48 @@ body {
 </section>
 
 <!-- How It Works -->
-<section class="process-section">
+<section class="section-modern">
     <div class="container">
-        <h2 class="section-title">How Joraki Ventures Works</h2>
-        <p class="section-subtitle">Simple, secure, and sustainable</p>
+        <div class="section-header-modern">
+            <div class="section-badge">
+                <i class="fas fa-rocket"></i>
+                <span>Simple Process</span>
+            </div>
+            <h2 class="section-title-modern">How Joraki Works</h2>
+            <p class="section-subtitle-modern">From submission to sale in 4 easy steps</p>
+        </div>
         
         <div class="row g-4">
             <div class="col-lg-3 col-md-6">
-                <div class="process-card">
-                    <div class="process-number">1</div>
-                    <div class="process-icon"><i class="fas fa-upload"></i></div>
-                    <h4>Submit Your Item</h4>
-                    <p>Fill out our simple form with details, upload photos, and set your price.</p>
+                <div class="process-card-modern">
+                    <div class="process-number-modern">1</div>
+                    <div class="process-icon-modern"><i class="fas fa-upload"></i></div>
+                    <h4>Submit Item</h4>
+                    <p>Upload photos and details through our simple form</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
-                <div class="process-card">
-                    <div class="process-number">2</div>
-                    <div class="process-icon"><i class="fas fa-clipboard-check"></i></div>
-                    <h4>We Review</h4>
-                    <p>Our team reviews within 24-48 hours and arranges pickup and payment.</p>
+                <div class="process-card-modern">
+                    <div class="process-number-modern">2</div>
+                    <div class="process-icon-modern"><i class="fas fa-clipboard-check"></i></div>
+                    <h4>Quick Review</h4>
+                    <p>Our team reviews within 24-48 hours</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
-                <div class="process-card">
-                    <div class="process-number">3</div>
-                    <div class="process-icon"><i class="fas fa-tools"></i></div>
-                    <h4>Refurbishment</h4>
-                    <p>Expert technicians inspect, repair, and certify every item.</p>
+                <div class="process-card-modern">
+                    <div class="process-number-modern">3</div>
+                    <div class="process-icon-modern"><i class="fas fa-tools"></i></div>
+                    <h4>Professional Refurbishment</h4>
+                    <p>Expert certification and quality check</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
-                <div class="process-card">
-                    <div class="process-number">4</div>
-                    <div class="process-icon"><i class="fas fa-shopping-bag"></i></div>
+                <div class="process-card-modern">
+                    <div class="process-number-modern">4</div>
+                    <div class="process-icon-modern"><i class="fas fa-shopping-bag"></i></div>
                     <h4>Ready to Sell</h4>
-                    <p>Listed on marketplace at competitive prices for buyers.</p>
+                    <p>Listed at competitive market prices</p>
                 </div>
             </div>
         </div>
@@ -635,37 +830,37 @@ body {
 </section>
 
 <!-- Featured Products -->
-<section class="products-section">
+<section class="section-modern" style="background: var(--light);">
     <div class="container">
-        <h2 class="section-title">Recently Refurbished</h2>
-        <p class="section-subtitle">Quality products at unbeatable prices</p>
+        <div class="section-header-modern">
+            <div class="section-badge">
+                <i class="fas fa-fire"></i>
+                <span>Hot Deals</span>
+            </div>
+            <h2 class="section-title-modern">Recently Refurbished</h2>
+            <p class="section-subtitle-modern">Premium quality products at unbeatable prices</p>
+        </div>
         
         <?php if (!empty($featured_items)): ?>
         <div class="row g-4 mb-5">
             <?php foreach ($featured_items as $item): ?>
             <div class="col-lg-4 col-md-6">
-                <div class="product-card">
+                <div class="product-card-modern">
                     <?php $image_path = !empty($item['image']) ? 'uploads/' . htmlspecialchars($item['image']) : 'assets/images/placeholder.jpg'; ?>
-                    <img src="<?php echo $image_path; ?>" alt="<?php echo htmlspecialchars($item['title']); ?>" class="product-image" onerror="this.src='https://via.placeholder.com/400x280/f8fafc/2563eb?text=No+Image'">
+                    <img src="<?php echo $image_path; ?>" alt="<?php echo htmlspecialchars($item['title']); ?>" class="product-image-modern" onerror="this.src='https://via.placeholder.com/400x300/667eea/ffffff?text=Product'">
                     
-                    <div class="product-content">
-                        <div class="product-badges">
-                            <span class="badge-custom badge-success">
-                                <i class="fas fa-check-circle me-1"></i>Refurbished
-                            </span>
-                            <span class="badge-custom badge-primary"><?php echo htmlspecialchars($item['category']); ?></span>
-                            <span class="badge-custom badge-gray"><?php echo ucfirst(htmlspecialchars($item['condition_type'])); ?></span>
+                    <div class="product-content-modern">
+                        <div class="product-badges-modern">
+                            <span class="badge-modern badge-gradient-1">Refurbished</span>
+                            <span class="badge-modern badge-gradient-2"><?php echo htmlspecialchars($item['category']); ?></span>
                         </div>
                         
-                        <h3 class="product-title"><?php echo htmlspecialchars($item['title']); ?></h3>
-                        <p class="product-description"><?php echo substr(htmlspecialchars($item['description']), 0, 100); ?>...</p>
+                        <h3 class="product-title-modern"><?php echo htmlspecialchars($item['title']); ?></h3>
+                        <p class="product-description-modern"><?php echo substr(htmlspecialchars($item['description']), 0, 100); ?>...</p>
                         
-                        <div class="product-footer">
-                            <div>
-                                <span class="product-price-label">Price</span>
-                                <div class="product-price">KSh <?php echo number_format($item['price'], 0); ?></div>
-                            </div>
-                            <a href="buy_section/item_details.php?id=<?php echo $item['id']; ?>" class="btn-primary-clean">
+                        <div class="product-footer-modern">
+                            <div class="product-price-modern">KSh <?php echo number_format($item['price'], 0); ?></div>
+                            <a href="buy_section/index.php<?php echo $item['id']; ?>" class="btn-product-modern">
                                 View <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>
@@ -676,54 +871,68 @@ body {
         </div>
         
         <div class="text-center">
-            <a href="buy_section/item_details.php" class="btn-primary-clean">
-                View All Items <i class="fas fa-arrow-right"></i>
+            <a href="buy_section/index.php" class="btn-hero-primary">
+                View All Products <i class="fas fa-arrow-right"></i>
             </a>
         </div>
         <?php else: ?>
-        <div class="empty-state">
-            <i class="fas fa-box-open"></i>
-            <h4>No items available at the moment</h4>
-            <p>Check back soon for amazing refurbished products!</p>
+        <div class="text-center py-5">
+            <i class="fas fa-box-open" style="font-size: 5rem; color: #cbd5e1; margin-bottom: 20px;"></i>
+            <h4 style="color: var(--gray);">No items available</h4>
+            <p style="color: var(--gray);">Check back soon for amazing deals!</p>
         </div>
         <?php endif; ?>
     </div>
 </section>
 
 <!-- Features Section -->
-<section class="features-section">
+<section class="section-modern features-modern">
     <div class="container">
-        <h2 class="section-title text-white mb-4">Why Choose Joraki?</h2>
-        <p class="section-subtitle text-white mb-5" style="opacity: 0.9;">Your trusted partner for quality refurbished items</p>
+        <div class="section-header-modern">
+            <div class="section-badge">
+                <i class="fas fa-award"></i>
+                <span>Why Choose Us</span>
+            </div>
+            <h2 class="section-title-modern text-white">Why Choose Joraki?</h2>
+            <p class="section-subtitle-modern text-white" style="opacity: 0.9;">Your trusted partner for quality refurbished items</p>
+        </div>
         
         <div class="row g-4">
             <div class="col-lg-3 col-md-6">
-                <div class="feature-card text-center">
-                    <div class="feature-icon mx-auto"><i class="fas fa-shield-alt"></i></div>
+                <div class="feature-card-modern">
+                    <div class="feature-icon-modern">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
                     <h5>Secure Transactions</h5>
-                    <p>All payments processed securely with full buyer protection.</p>
+                    <p>All payments processed securely with full buyer protection and encryption.</p>
                 </div>
             </div>
             
             <div class="col-lg-3 col-md-6">
-                <div class="feature-card text-center">
-                    <div class="feature-icon mx-auto"><i class="fas fa-certificate"></i></div>
+                <div class="feature-card-modern">
+                    <div class="feature-icon-modern">
+                        <i class="fas fa-certificate"></i>
+                    </div>
                     <h5>Quality Guaranteed</h5>
                     <p>Professional inspection and refurbishment by certified technicians.</p>
                 </div>
             </div>
             
             <div class="col-lg-3 col-md-6">
-                <div class="feature-card text-center">
-                    <div class="feature-icon mx-auto"><i class="fas fa-hand-holding-usd"></i></div>
+                <div class="feature-card-modern">
+                    <div class="feature-icon-modern">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
                     <h5>Best Prices</h5>
-                    <p>Fair pricing for sellers, unbeatable deals for buyers.</p>
+                    <p>Fair pricing for sellers, unbeatable deals for buyers. Win-win.</p>
                 </div>
             </div>
             
             <div class="col-lg-3 col-md-6">
-                <div class="feature-card text-center">
-                    <div class="feature-icon mx-auto"><i class="fas fa-leaf"></i></div>
+                <div class="feature-card-modern">
+                    <div class="feature-icon-modern">
+                        <i class="fas fa-leaf"></i>
+                    </div>
                     <h5>Eco-Friendly</h5>
                     <p>Sustainable shopping that reduces waste and protects our planet.</p>
                 </div>
@@ -733,34 +942,44 @@ body {
 </section>
 
 <!-- Categories -->
-<section class="categories-section">
+<section class="section-modern">
     <div class="container">
-        <h2 class="section-title">Shop by Category</h2>
-        <p class="section-subtitle">Find exactly what you need</p>
+        <div class="section-header-modern">
+            <div class="section-badge">
+                <i class="fas fa-th"></i>
+                <span>Browse</span>
+            </div>
+            <h2 class="section-title-modern">Shop by Category</h2>
+            <p class="section-subtitle-modern">Find exactly what you're looking for</p>
+        </div>
         
         <div class="row g-4">
             <div class="col-lg-3 col-md-6">
-                <a href="buy_section/item_details.php?category=Electronics" class="category-card">
-                    <div class="category-icon">💻</div>
-                    <h5>Electronics</h5>
+                <a href="buy_section/index.php?category=Electronics" class="process-card-modern" style="text-decoration: none;">
+                    <div class="process-icon-modern">💻</div>
+                    <h4>Electronics</h4>
+                    <p>Laptops, phones, tablets & more</p>
                 </a>
             </div>
             <div class="col-lg-3 col-md-6">
-                <a href="buy_section/item_details.php?category=Furniture" class="category-card">
-                    <div class="category-icon">🛋️</div>
-                    <h5>Furniture</h5>
+                <a href="buy_section/index.php?category=Furniture" class="process-card-modern" style="text-decoration: none;">
+                    <div class="process-icon-modern">🛋️</div>
+                    <h4>Furniture</h4>
+                    <p>Chairs, tables, storage & more</p>
                 </a>
             </div>
             <div class="col-lg-3 col-md-6">
-                <a href="buy_section/item_details.php?category=Appliances" class="category-card">
-                    <div class="category-icon">🏠</div>
-                    <h5>Appliances</h5>
+                <a href="buy_section/index.php?category=Appliances" class="process-card-modern" style="text-decoration: none;">
+                    <div class="process-icon-modern">🏠</div>
+                    <h4>Appliances</h4>
+                    <p>Kitchen, laundry & home essentials</p>
                 </a>
             </div>
             <div class="col-lg-3 col-md-6">
-                <a href="buy_section/item_details.php?category=Other" class="category-card">
-                    <div class="category-icon">📦</div>
-                    <h5>Other</h5>
+                <a href="buy_section/index.php?category=Other" class="process-card-modern" style="text-decoration: none;">
+                    <div class="process-icon-modern">📦</div>
+                    <h4>Other Items</h4>
+                    <p>Tools, sports, books & more</p>
                 </a>
             </div>
         </div>
@@ -768,16 +987,16 @@ body {
 </section>
 
 <!-- CTA Section -->
-<section class="cta-section">
+<section class="cta-modern">
     <div class="container">
-        <h2 class="cta-title">Ready to Get Started?</h2>
-        <p class="cta-text">Join thousands of satisfied customers buying and selling refurbished items with complete confidence.</p>
-        <div class="d-flex flex-wrap gap-3 justify-content-center">
-            <a href="sell_section/index.php" class="btn-primary-clean">
+        <h2 class="cta-title-modern">Ready to Get Started?</h2>
+        <p class="cta-text-modern">Join thousands of satisfied customers buying and selling refurbished items with complete confidence and peace of mind.</p>
+        <div class="d-flex flex-wrap gap-4 justify-content-center">
+            <a href="sell_section/index.php" class="btn-cta-white">
                 <i class="fas fa-tag"></i>
                 Sell Your Item
             </a>
-            <a href="buy_section/index.php" class="btn-outline-clean">
+            <a href="buy_section/index.php" class="btn-cta-white">
                 <i class="fas fa-shopping-cart"></i>
                 Start Shopping
             </a>
@@ -786,10 +1005,10 @@ body {
 </section>
 
 <script>
-// Counter animation
+// Counter animation with intersection observer
 function animateCounter(element, target) {
     let current = 0;
-    const increment = target / 50;
+    const increment = target / 60;
     const timer = setInterval(() => {
         current += increment;
         if (current >= target) {
@@ -798,14 +1017,14 @@ function animateCounter(element, target) {
         } else {
             element.textContent = Math.floor(current).toLocaleString();
         }
-    }, 30);
+    }, 25);
 }
 
 // Trigger animations on scroll
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting && !entry.target.dataset.animated) {
-            const numberElement = entry.target.querySelector('.stat-number');
+            const numberElement = entry.target.querySelector('.stat-number-modern');
             if (numberElement) {
                 const target = parseInt(numberElement.textContent.replace(/[^0-9]/g, ''));
                 animateCounter(numberElement, target);
@@ -813,41 +1032,53 @@ const observer = new IntersectionObserver((entries) => {
             }
         }
     });
-}, { threshold: 0.5 });
+}, { threshold: 0.3 });
 
-document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
+document.querySelectorAll('.stat-card-glass').forEach(card => observer.observe(card));
+
+// Smooth scroll for internal links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
 </script>
+
 <!-- ============================================ -->
-<!-- FLOATING CHATBOT BUTTON - Add anywhere in your page -->
+<!-- FLOATING CHATBOT BUTTON - Premium Design -->
 <!-- ============================================ -->
 
 <style>
-/* Floating Chatbot Button */
+/* Premium Chatbot Button */
 .chatbot-float-btn {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    width: 65px;
-    height: 65px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    width: 70px;
+    height: 70px;
+    background: var(--gradient-1);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+    box-shadow: 0 10px 40px rgba(99, 102, 241, 0.5);
     z-index: 9999;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
 }
 
 .chatbot-float-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 12px 35px rgba(37, 99, 235, 0.5);
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 0 15px 50px rgba(99, 102, 241, 0.6);
 }
 
 .chatbot-float-btn i {
-    font-size: 1.8rem;
+    font-size: 2rem;
     color: white;
 }
 
@@ -863,150 +1094,141 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
     display: block;
 }
 
-/* Notification Badge */
 .chat-notification {
     position: absolute;
     top: -5px;
     right: -5px;
-    width: 24px;
-    height: 24px;
-    background: #ef4444;
+    width: 26px;
+    height: 26px;
+    background: var(--gradient-2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 800;
     color: white;
     border: 3px solid white;
-    animation: bounce 2s infinite;
+    animation: bounceNotif 2s infinite;
 }
 
-@keyframes bounce {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.2);
-    }
+@keyframes bounceNotif {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
 }
 
-/* Floating Chatbot Window */
+/* Premium Chatbot Window */
 .chatbot-window {
     position: fixed;
-    bottom: 110px;
+    bottom: 120px;
     right: 30px;
-    width: 400px;
-    max-height: 600px;
+    width: 420px;
+    max-height: 650px;
     background: white;
-    border-radius: 20px;
-    box-shadow: 0 15px 60px rgba(0, 0, 0, 0.3);
+    border-radius: 28px;
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.25);
     z-index: 9998;
     display: none;
     flex-direction: column;
     overflow: hidden;
-    animation: slideUp 0.3s ease;
+    animation: slideUpChat 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(99, 102, 241, 0.1);
 }
 
 .chatbot-window.active {
     display: flex;
 }
 
-@keyframes slideUp {
+@keyframes slideUpChat {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(40px) scale(0.9);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
-/* Chat Header */
 .chat-header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    background: var(--gradient-1);
     color: white;
-    padding: 20px 25px;
+    padding: 25px 30px;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 16px;
 }
 
 .chat-avatar {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 1.75rem;
+    backdrop-filter: blur(10px);
 }
 
 .chat-header-info h3 {
-    font-size: 1.125rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 800;
     margin: 0;
 }
 
 .chat-status-online {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.8rem;
+    gap: 8px;
+    font-size: 0.875rem;
     opacity: 0.95;
 }
 
 .status-dot {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     background: #10b981;
     border-radius: 50%;
-    animation: pulse 2s infinite;
+    animation: pulseStatus 2s infinite;
 }
 
-@keyframes pulse {
-    0%, 100% {
-        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-    }
-    50% {
-        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
-    }
+@keyframes pulseStatus {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
 }
 
-/* Chat Body */
 .chat-body {
     flex: 1;
-    padding: 20px;
+    padding: 25px;
     overflow-y: auto;
     background: #f8fafc;
-    max-height: 400px;
+    max-height: 450px;
 }
 
 .chat-body::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
 }
 
 .chat-body::-webkit-scrollbar-track {
     background: #e2e8f0;
-}
-
-.chat-body::-webkit-scrollbar-thumb {
-    background: var(--primary);
     border-radius: 10px;
 }
 
-/* Chat Messages */
-.chat-message {
-    margin-bottom: 15px;
-    animation: fadeIn 0.3s ease;
+.chat-body::-webkit-scrollbar-thumb {
+    background: var(--gradient-1);
+    border-radius: 10px;
 }
 
-@keyframes fadeIn {
+.chat-message {
+    margin-bottom: 18px;
+    animation: fadeInMessage 0.4s ease;
+}
+
+@keyframes fadeInMessage {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(15px);
     }
     to {
         opacity: 1;
@@ -1016,12 +1238,13 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
 
 .message-bubble {
     display: inline-block;
-    padding: 12px 16px;
-    border-radius: 18px;
-    max-width: 75%;
+    padding: 14px 20px;
+    border-radius: 20px;
+    max-width: 80%;
     word-wrap: break-word;
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: 0.975rem;
+    line-height: 1.6;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .message-user {
@@ -1029,9 +1252,9 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
 }
 
 .message-user .message-bubble {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    background: var(--gradient-1);
     color: white;
-    border-bottom-right-radius: 4px;
+    border-bottom-right-radius: 6px;
 }
 
 .message-bot {
@@ -1042,75 +1265,78 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
     background: white;
     color: var(--dark);
     border: 1px solid #e2e8f0;
-    border-bottom-left-radius: 4px;
+    border-bottom-left-radius: 6px;
 }
 
 .message-time {
     font-size: 0.7rem;
     opacity: 0.6;
-    margin-top: 4px;
+    margin-top: 6px;
+    font-weight: 500;
 }
 
-/* Welcome Message */
 .chat-welcome {
     text-align: center;
-    padding: 30px 15px;
+    padding: 40px 20px;
     color: var(--gray);
 }
 
 .chat-welcome i {
-    font-size: 3rem;
-    color: var(--primary);
-    margin-bottom: 15px;
-    opacity: 0.3;
+    font-size: 4rem;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+    opacity: 0.6;
 }
 
 .chat-welcome h4 {
-    font-size: 1.125rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 800;
     color: var(--dark);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .chat-welcome p {
-    font-size: 0.9rem;
+    font-size: 0.975rem;
     margin: 0;
 }
 
-/* Quick Replies */
 .quick-replies {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    padding: 15px 20px 0;
+    gap: 10px;
+    padding: 18px 25px 0;
     background: #f8fafc;
 }
 
 .quick-reply-btn {
-    padding: 8px 14px;
+    padding: 10px 18px;
     background: white;
     border: 2px solid var(--primary);
-    border-radius: 20px;
+    border-radius: 24px;
     color: var(--primary);
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: 0.875rem;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .quick-reply-btn:hover {
-    background: var(--primary);
+    background: var(--gradient-1);
     color: white;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(99, 102, 241, 0.3);
 }
 
-/* Typing Indicator */
 .typing-indicator {
     display: none;
-    padding: 12px 16px;
+    padding: 14px 20px;
     background: white;
-    border-radius: 18px;
-    border-bottom-left-radius: 4px;
+    border-radius: 20px;
+    border-bottom-left-radius: 6px;
     width: fit-content;
     border: 1px solid #e2e8f0;
 }
@@ -1121,12 +1347,12 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
 
 .typing-dot {
     display: inline-block;
-    width: 8px;
-    height: 8px;
-    background: var(--gray);
+    width: 10px;
+    height: 10px;
+    background: var(--primary);
     border-radius: 50%;
-    margin: 0 2px;
-    animation: typing 1.4s infinite;
+    margin: 0 3px;
+    animation: typingAnim 1.4s infinite;
 }
 
 .typing-dot:nth-child(2) {
@@ -1137,89 +1363,85 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
     animation-delay: 0.4s;
 }
 
-@keyframes typing {
-    0%, 60%, 100% {
-        transform: translateY(0);
-    }
-    30% {
-        transform: translateY(-8px);
-    }
+@keyframes typingAnim {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-10px); opacity: 1; }
 }
 
-/* Chat Footer */
 .chat-footer {
-    padding: 20px;
+    padding: 25px;
     background: white;
     border-top: 2px solid #f1f5f9;
 }
 
 .chat-input-wrapper {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
 }
 
 .chat-input {
     flex: 1;
-    padding: 12px 16px;
+    padding: 14px 20px;
     border: 2px solid #e2e8f0;
-    border-radius: 25px;
-    font-size: 0.95rem;
+    border-radius: 28px;
+    font-size: 0.975rem;
     transition: all 0.3s ease;
 }
 
 .chat-input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
 .chat-send-btn {
-    width: 45px;
-    height: 45px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-1);
     border: none;
     border-radius: 50%;
     color: white;
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 5px 20px rgba(99, 102, 241, 0.3);
 }
 
 .chat-send-btn:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
+    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
 }
 
 .chat-send-btn:active {
     transform: scale(0.95);
 }
 
-/* Powered By */
 .chat-powered {
     text-align: center;
-    padding: 10px;
+    padding: 12px;
     font-size: 0.75rem;
     color: var(--gray);
     background: #f8fafc;
+    font-weight: 600;
 }
 
-/* Mobile Responsive */
 @media (max-width: 480px) {
     .chatbot-window {
         width: calc(100vw - 20px);
         right: 10px;
-        bottom: 100px;
-        max-height: 500px;
+        bottom: 110px;
+        max-height: 550px;
     }
     
     .chatbot-float-btn {
         bottom: 20px;
         right: 20px;
-        width: 60px;
-        height: 60px;
+        width: 65px;
+        height: 65px;
     }
 }
 </style>
@@ -1233,7 +1455,6 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
 
 <!-- Chatbot Window -->
 <div class="chatbot-window" id="chatWindow">
-    <!-- Header -->
     <div class="chat-header">
         <div class="chat-avatar">
             <i class="fas fa-robot"></i>
@@ -1242,12 +1463,11 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
             <h3>Joraki Assistant</h3>
             <div class="chat-status-online">
                 <span class="status-dot"></span>
-                <span>Online</span>
+                <span>Online Now</span>
             </div>
         </div>
     </div>
 
-    <!-- Quick Replies -->
     <div class="quick-replies">
         <button class="quick-reply-btn" onclick="sendQuickReply('How do I sell?')">
             How to sell?
@@ -1256,11 +1476,10 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
             Track order
         </button>
         <button class="quick-reply-btn" onclick="sendQuickReply('Pricing')">
-            Pricing
+            Pricing info
         </button>
     </div>
 
-    <!-- Chat Body -->
     <div class="chat-body" id="chatBody">
         <div class="chat-welcome">
             <i class="fas fa-robot"></i>
@@ -1269,7 +1488,6 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
         </div>
     </div>
 
-    <!-- Footer -->
     <div class="chat-footer">
         <div class="chat-input-wrapper">
             <input 
@@ -1285,19 +1503,17 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
         </div>
     </div>
 
-    <!-- Powered By -->
     <div class="chat-powered">
         Powered by Joraki Ventures
     </div>
 </div>
 
 <script>
-    const API_URL = "http://localhost/joraki/chart.php"; // 🟢 CHANGE to your PHP path
+    const API_URL = "http://localhost/joraki/chart.php";
     
     let isChatOpen = false;
     let isFirstMessage = true;
 
-    // Toggle Chat Window
     function toggleChat() {
         isChatOpen = !isChatOpen;
         const chatWindow = document.getElementById('chatWindow');
@@ -1315,11 +1531,9 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
         }
     }
 
-    // Add Message to Chat
     function addMessage(sender, text) {
         const chatBody = document.getElementById('chatBody');
         
-        // Remove welcome message on first message
         if (isFirstMessage) {
             chatBody.innerHTML = '';
             isFirstMessage = false;
@@ -1344,7 +1558,6 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
         chatBody.scrollTop = chatBody.scrollHeight;
     }
 
-    // Show Typing Indicator
     function showTypingIndicator() {
         const chatBody = document.getElementById('chatBody');
         const indicator = document.createElement('div');
@@ -1361,27 +1574,22 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
         chatBody.scrollTop = chatBody.scrollHeight;
     }
 
-    // Remove Typing Indicator
     function removeTypingIndicator() {
         const indicator = document.getElementById('typingIndicator');
         if (indicator) indicator.remove();
     }
 
-    // Send Message
     async function sendMessage() {
         const userInput = document.getElementById('userInput');
         const message = userInput.value.trim();
         
         if (!message) return;
 
-        // Add user message
         addMessage('user', message);
         userInput.value = '';
 
-        // Show typing indicator
         showTypingIndicator();
 
-        // Send to API
         const formData = new FormData();
         formData.append('message', message);
 
@@ -1406,7 +1614,6 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
         }
     }
 
-    // Quick Reply
     function sendQuickReply(message) {
         if (!isChatOpen) {
             toggleChat();
@@ -1415,7 +1622,6 @@ document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
         sendMessage();
     }
 
-    // Show notification after 3 seconds
     setTimeout(() => {
         if (!isChatOpen) {
             document.getElementById('chatNotification').style.display = 'flex';
